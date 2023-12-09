@@ -4,6 +4,5 @@ Flask
 numpy
 scikit-learn
 seaborn
-xgboost
-fcntl
+xgboost==1.3.3
 -e .
