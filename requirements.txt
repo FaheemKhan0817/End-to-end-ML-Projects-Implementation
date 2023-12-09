@@ -1,7 +1,9 @@
 pandas
+gunicorn
 Flask
 numpy
 scikit-learn
 seaborn
 xgboost
+fcntl
 -e .
