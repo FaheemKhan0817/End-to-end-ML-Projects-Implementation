@@ -1,4 +1,4 @@
-age,workclass,education.num,marital.status,occupation,relationship,race,sex,capital.gain,capital.loss,hours.per.week,income
+age,workclass,education_num,marital_status,occupation,relationship,race,sex,capital_gain,capital_loss,hours_per_week,income
 62,3,10,5,11,4,4,0,0,1617,33,0
 52,3,9,6,13,1,4,1,0,0,40,0
 69,3,4,2,9,0,4,1,0,0,48,0

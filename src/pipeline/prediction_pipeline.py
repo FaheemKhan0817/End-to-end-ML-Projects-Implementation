@@ -1,8 +1,3 @@
-# Create prediction peipeline class -> completed
-# create function for load a object -> completed
-# Create custome class basd upon our dataset -> completed
-# Create function to convert data into Dataframe with the help of DIct
-
 import os, sys
 from src.logger import logging
 from src.exception import CustmeException

@@ -30,9 +30,10 @@ class DataTransformation:
 
             logging.info(" Data Transformation Started")
 
-            numerical_features = ['age', 'workclass',  'education.num', 'marital.status',
-            'occupation', 'relationship', 'race', 'sex', 'capital.gain',
-            'capital.loss', 'hours.per.week']
+            numerical_features = ['age', 'workclass', 'education_num', 'marital_status',
+                       'occupation', 'relationship', 'race', 'sex', 'capital_gain',
+                       'capital_loss', 'hours_per_week']
+
 
             num_pipeline = Pipeline(
                 steps = [
@@ -83,10 +84,9 @@ class DataTransformation:
             train_data = pd.read_csv(train_path)
             test_data = pd.read_csv(test_path)
 
-            numerical_features = ['age', 'workclass',  'education.num', 'marital.status',
-            'occupation', 'relationship', 'race', 'sex', 'capital.gain',
-            'capital.loss', 'hours.per.week']
-
+            numerical_features = ['age', 'workclass', 'education_num', 'marital_status',
+                       'occupation', 'relationship', 'race', 'sex', 'capital_gain',
+                       'capital_loss', 'hours_per_week']
 
             for col in numerical_features:
                 self.remote_outliers_IQR(col = col, df = train_data)
