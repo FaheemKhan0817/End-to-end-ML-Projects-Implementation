@@ -1,26 +1,63 @@
 <html>
 
 <head>
-    <title>Machine Learning Pipeline project</title>
+    <title>Salaray Classification Machine Learning Project</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
         * {
             box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
 
-        input[type=text],
-        select,
-        textarea {
-            width: 50%;
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            resize: vertical;
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f2f2f2;
+        }
+
+        h1 {
+            padding: 15px;
+            margin: 25px;
+            background-color: #33475b;
+            border-radius: 10px;
+            color: white;
+            font-family: 'Avenir', sans-serif;
+            text-align: center;
+        }
+
+        .container {
+            border-radius: 10px;
+            background-color: #fff;
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 600px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .row {
+            margin-bottom: 20px;
+        }
+
+        .col-25,
+        .col-75 {
+            width: 100%;
+            margin-top: 6px;
         }
 
         label {
-            padding: 12px 12px 12px 0;
-            display: inline-block;
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        input[type=text],
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-top: 6px;
+            resize: vertical;
         }
 
         input[type=submit] {
@@ -36,59 +73,13 @@
         input[type=submit]:hover {
             background-color: #45a049;
         }
-
-        .container {
-            border-radius: 5px;
-            background-color: #f2f2f2;
-            padding: 20px;
-        }
-
-        .col-25 {
-            float: left;
-            width: 25%;
-            margin-top: 6px;
-        }
-
-        .col-75 {
-            float: left;
-            width: 75%;
-            margin-top: 6px;
-        }
-
-        /* Clear floats after the columns */
-        .row:after {
-            content: "";
-            display: table;
-            clear: both;
-        }
-
-        /* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */
-        @media screen and (max-width: 600px) {
-
-            .col-25,
-            .col-75,
-            input[type=submit] {
-                width: 100%;
-                margin-top: 0;
-            }
-        }
-
-        h1 {
-            padding: 15px;
-            margin: 25px;
-
-            /* other styling */
-            background-color: #33475b;
-            border-radius: 50px;
-            color: white;
-            font-family: Avenir;
-        }
     </style>
+ 
 </head>
 
 <body>
 
-    <h1 style="text-align:center;">Machine Learning Pipeline project</h1>
+    <h1 style="text-align:center;">Salaray Classification Machine Learning Project</h1>
     <div class="form">
         <form action="{{url_for('prediction_data')}}" method="POST">
             <label for="operation"></label>
@@ -97,7 +88,7 @@
                 <form action="/action_page.php">
                     <div class="row">
                         <div class="col-25">
-                            <label for="age">age</label>
+                            <label for="age">Age</label>
                         </div>
                         <div class="col-75">
                             <input type="text" id="age" name="age" placeholder="Enter your Age..">
@@ -105,59 +96,61 @@
                     </div>
                     <div class="row">
                         <div class="col-25">
-                            <label for="workclass">Select your workclass</label>
+                            <label for="workclass">Select Your Workclass</label>
                         </div>
                         <div class="col-75">
                             <select id="workclass" name="workclass">
-                                <option value="6">State-gov</option>
-                                <option value="5">Self-emp-not-inc</option>
+                                <option value="6">State Government</option>
+                                <option value="5">Self-Employed Not Incorporated</option>
                                 <option value="3">Private</option>
-                                <option value="0">Federal-gov</option>
-                                <option value="1">Local-gov</option>
-                                <option value="4">Self-emp-inc</option>
-                                <option value="7">Without-pay</option>
-                                <option value="2">Never-worked</option>
+                                <option value="0">Federal Government</option>
+                                <option value="1">Local Government</option>
+                                <option value="4">Self-Employed Incorporated</option>
+                                <option value="7">Without Pay</option>
+                                <option value="2">Never Worked</option>
                             </select>
                         </div>
                     </div>
                     <div class="form">
                         <div class="col-25">
-                            <label for="education_num">Choose your Education</label>
+                            <label for="education_num">Choose Your Education</label>
                         </div>
                         <div class="col-75">
                             <select id="education_num" name="education_num">
                                 <option value="13">Bachelors</option>
-                                <option value="9">HS-grad</option>
-                                <option value="7">11th</option>
+                                <option value="9">High School Graduate</option>
+                                <option value="7">11th Grade</option>
                                 <option value="14">Masters</option>
-                                <option value="5">9th</option>
-                                <option value="10">Some-college</option>
-                                <option value="12">Assoc-acdm</option>
-                                <option value="11">Assoc-voc</option>
-                                <option value="4">7th-8th</option>
+                                <option value="5">9th Grade</option>
+                                <option value="10">Some College</option>
+                                <option value="12">Associate of Arts</option>
+                                <option value="11">Associate of Science</option>
+                                <option value="4">7th-8th Grade</option>
                                 <option value="16">Doctorate</option>
-                                <option value="15">Prof-school</option>
-                                <option value="3">5th-6th</option>
-                                <option value="6">10th</option>
-                                <option value="2">1st-4th</option>
+                                <option value="15">Professional School</option>
+                                <option value="3">5th-6th Grade</option>
+                                <option value="6">10th Grade</option>
+                                <option value="2">1st-4th Grade</option>
                                 <option value="1">Preschool</option>
-                                <option value="8">12th</option>
+                                <option value="8">12th Grade</option>
                             </select>
+                            
+                            
                         </div>
                         
                     </div>
                     <div class="form">
                         <div class="col-25">
-                            <label for="marital_status">Choose your marital_status</label>
+                            <label for="marital_status">Choose Your Martial Status</label>
                         </div>
                         <div class="col-75">
                             <select id="marital_status" name="marital_status">
-                                <option value="4">Never-married</option>
-                                <option value="2">Married-civ-spouse</option>
+                                <option value="4">Never Married</option>
+                                <option value="2">Married - Civilian Spouse</option>
                                 <option value="0">Divorced</option>
-                                <option value="3">Married-spouse-absent</option>
+                                <option value="3">Married - Spouse Absent</option>
                                 <option value="5">Separated</option>
-                                <option value="1">Married-AF-spouse</option>
+                                <option value="1">Married - Armed Forces Spouse</option>
                                 <option value="6">Widowed</option>
                             </select>
                         </div>
@@ -165,61 +158,65 @@
                     </div>
                     <div class="form">
                         <div class="col-25">
-                            <label for="occupation">Choose your occupation</label>
+                            <label for="occupation">Choose Your Occupation</label>
                         </div>
                         <div class="col-75">
                             <select id="occupation" name="occupation">
-                                <option value="0">Adm-clerical</option>
-                                <option value="3">Exec-managerial</option>
-                                <option value="5">Handlers-cleaners</option>
-                                <option value="9">Prof-specialty</option>
-                                <option value="7">Other-service</option>
+                                <option value="0">Administrative / Clerical</option>
+                                <option value="3">Executive / Managerial</option>
+                                <option value="5">Handlers / Cleaners</option>
+                                <option value="9">Professional / Specialty</option>
+                                <option value="7">Other Service</option>
                                 <option value="11">Sales</option>
-                                <option value="2">Craft-repair</option>
-                                <option value="13">Transport-moving</option>
-                                <option value="4">Farming-fishing</option>
-                                <option value="6">Machine-op-inspct</option>
-                                <option value="12">Tech-support</option>
-                                <option value="10">Protective-serv</option>
-                                <option value="1">Armed-Forces</option>
-                                <option value="8">Priv-house-serv</option>
+                                <option value="2">Craft / Repair</option>
+                                <option value="13">Transport / Moving</option>
+                                <option value="4">Farming / Fishing</option>
+                                <option value="6">Machine Operation / Inspection</option>
+                                <option value="12">Tech Support</option>
+                                <option value="10">Protective Services</option>
+                                <option value="1">Armed Forces</option>
+                                <option value="8">Private House Service</option>
                             </select>
+                            
                         </div>
                         
                     </div>
                     <div class="form">
                         <div class="col-25">
-                            <label for="relationship">Choose your relationship</label>
+                            <label for="relationship">Choose Your Relationship</label>
                         </div>
                         <div class="col-75">
                             <select id="relationship" name="relationship">
-                                <option value="1">Not-in-family</option>
+                                <option value="1">Not in Family</option>
                                 <option value="0">Husband</option>
                                 <option value="5">Wife</option>
-                                <option value="3">Own-child</option>
+                                <option value="3">Own Child</option>
                                 <option value="4">Unmarried</option>
-                                <option value="2">Other-relative</option>
+                                <option value="2">Other Relative</option>
                             </select>
+                            
                         </div>
                         
                     </div>
 
                     <div class="form">
                         <div class="col-25">
-                            <label for="race">Choose your race</label>
+                            <label for="race">Choose Your Race</label>
                         </div>
                         <div class="col-75">
                             <select id="race" name="race">
                                 <option value="4">White</option>
                                 <option value="2">Black</option>
-                                <option value="1">Asian-Pac-Islander</option>
-                                <option value="0">Amer-Indian-Eskimo</option>
+                                <option value="1">Asian-Pacific Islander</option>
+                                <option value="0">American Indian Eskimo</option>
                                 <option value="3">Other</option>
                             </select>
+                            
+                        
                     </div>
                     <div class="row">
                         <div class="col-25">
-                            <label for="sex">sex</label>
+                            <label for="sex">Sex</label>
                         </div>
                         <div class="col-75">
                             <select id="sex" name="sex">
@@ -230,7 +227,7 @@
                     </div>
                     <div class="row">
                         <div class="col-25">
-                            <label for="capital_gain">capital_gain</label>
+                            <label for="capital_gain">Capital Gain</label>
                         </div>
                         <div class="col-75">
                             <input type="text" id="capital_gain" name="capital_gain" placeholder="Enter value (float)">
@@ -238,7 +235,7 @@
                     </div>
                     <div class="row">
                         <div class="col-25">
-                            <label for="capital_loss">capital_loss</label>
+                            <label for="capital_loss">Capital loss</label>
                         </div>
                         <div class="col-75">
                             <input type="text" id="capital_loss" name="capital_loss" placeholder="Enter value (float)">
@@ -246,7 +243,7 @@
                     </div>
                     <div class="row">
                         <div class="col-25">
-                            <label for="hours_per_week">hours_per_week</label>
+                            <label for="hours_per_week">Hours per Week</label>
                         </div>
                         <div class="col-75">
                             <input type="text" id="hours_per_week" name="hours_per_week" placeholder="Enter value (float)">
@@ -254,7 +251,7 @@
                     </div>
                     <div class="row">
                         <div class="col-25">
-                            <label for="native_country">native_country</label>
+                            <label for="native_country">Native Country</label>
                         </div>
                         <div class="col-75">
                             <select id="native_country" name="native_country">
