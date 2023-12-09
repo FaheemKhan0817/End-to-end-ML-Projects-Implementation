@@ -30,10 +30,10 @@ class DataTransformation:
 
             logging.info(" Data Transformation Started")
 
-            numerical_features = ['age', 'workclass',  'education_num', 'marital_status',
-            'occupation', 'relationship', 'race', 'sex', 'capital_gain',
-            'capital_loss', 'hours_per_week', 'native_country']
-# age = 2,5,78, 32, 56, 
+            numerical_features = ['age', 'workclass',  'education.num', 'marital.status',
+            'occupation', 'relationship', 'race', 'sex', 'capital.gain',
+            'capital.loss', 'hours.per.week']
+
             num_pipeline = Pipeline(
                 steps = [
                 ("imputer", SimpleImputer(strategy = 'median')),
@@ -52,25 +52,30 @@ class DataTransformation:
 
         except Exception as e:
             raise CustmeException(e, sys)
-        
     def remote_outliers_IQR(self, col, df):
         try:
-            Q1 = df[col].quantile(0.25)
-            Q3 = df[col].quantile(0.75)
+            if col in df.columns:
+                Q1 = df[col].quantile(0.25)
+                Q3 = df[col].quantile(0.75)
 
-            iqr = Q3 - Q1
+                iqr = Q3 - Q1
 
-            upper_limit = Q3 + 1.5 * iqr
-            lowwer_limit = Q1 - 1.5 * iqr
+                upper_limit = Q3 + 1.5 * iqr
+                lower_limit = Q1 - 1.5 * iqr
 
-            df.loc[(df[col]>upper_limit), col] = upper_limit
-            df.loc[(df[col]<lowwer_limit), col] = lowwer_limit
+                # Explicitly cast to int32 or int64, based on your needs
+                df[col] = df[col].astype(int)
 
-            return df
+                df.loc[df[col] > upper_limit, col] = int(upper_limit)
+                df.loc[df[col] < lower_limit, col] = int(lower_limit)
+            else:
+                print(f"Column '{col}' not found in the DataFrame.")
 
         except Exception as e:
-            logging.info("Outluers handling code")
+            print("Error occurred in outliers handling code:", e)
             raise CustmeException(e, sys)
+        
+
         
     def inititate_data_transformation(self, train_path, test_path):
 
@@ -78,9 +83,9 @@ class DataTransformation:
             train_data = pd.read_csv(train_path)
             test_data = pd.read_csv(test_path)
 
-            numerical_features = ['age', 'workclass',  'education_num', 'marital_status',
-            'occupation', 'relationship', 'race', 'sex', 'capital_gain',
-            'capital_loss', 'hours_per_week', 'native_country']
+            numerical_features = ['age', 'workclass',  'education.num', 'marital.status',
+            'occupation', 'relationship', 'race', 'sex', 'capital.gain',
+            'capital.loss', 'hours.per.week']
 
 
             for col in numerical_features:
@@ -96,16 +101,16 @@ class DataTransformation:
 
             preprocess_obj = self.get_data_transformation_obj()
 
-            traget_columns = "income"
-            drop_columns = [traget_columns]
+            target_columns = "income"
+            drop_columns = [target_columns]
 
             logging.info("Splitting train data into dependent and independent features")
             input_feature_train_data = train_data.drop(drop_columns, axis = 1)
-            traget_feature_train_data = train_data[traget_columns]
+            traget_feature_train_data = train_data[target_columns]
 
             logging.info("Splitting test data into dependent and independent features")
             input_feature_ttest_data = test_data.drop(drop_columns, axis = 1)
-            traget_feature_test_data = test_data[traget_columns]
+            traget_feature_test_data = test_data[target_columns]
 
             # Apply transfpormation on our train data and test data
             input_train_arr = preprocess_obj.fit_transform(input_feature_train_data)

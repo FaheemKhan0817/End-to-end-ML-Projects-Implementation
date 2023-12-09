@@ -24,12 +24,12 @@ class DataIngestion:
         logging.info("Data Ingestion started")
         try:
             logging.info("Data Reading using Pandas library from local system")
-            data = pd.read_csv(os.path.join("notbook/data", "income_cleandata.csv"))
+            data = pd.read_csv(os.path.join('C:/ML Projects/End-to-end-ML-Projects-Implementation/notebook/data/', 'cleanIncomedata.csv'))
             logging.info("Data Reading completed")
 
             os.makedirs(os.path.dirname(self.ingestion_config.raw_data_path), exist_ok=True)
             data.to_csv(self.ingestion_config.raw_data_path, index=False)
-            logging.info("Dat spliteted into train and test")
+            logging.info("Data splitted into train and test")
 
             train_set, test_set = train_test_split(data, test_size = .30, random_state=42)
 
@@ -44,15 +44,17 @@ class DataIngestion:
 
             )
         except Exception as e:
-            logging.info("Erro occured in data ingestion stage")
+            logging.info("Error occured in data ingestion stage")
             raise CustmeException(e, sys)
 
 if __name__ =="__main__":
     obj = DataIngestion()
-    treain_data_path , test_data_path = obj.inititate_data_ingestion()
+
+    train_data_path , test_data_path = obj.inititate_data_ingestion()
 
     data_transformation = DataTransformation()
-    train_arr, test_arr, _ = data_transformation.inititate_data_transformation(treain_data_path , test_data_path)
+    train_arr, test_arr, _ = data_transformation.inititate_data_transformation(train_data_path , test_data_path)
+
 
     modeltrainer = ModelTrainer()
     print(modeltrainer.inititate_model_trainer(train_arr, test_arr))

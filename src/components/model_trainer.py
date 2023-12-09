@@ -1,4 +1,5 @@
-import os, sys
+import os
+import sys
 import pandas as pd
 import numpy as np
 from src.logger import logging
@@ -14,11 +15,11 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import GridSearchCV
+import xgboost as xgb
 
 @dataclass
 class ModelTrainerConfig:
     train_model_file_apth = os.path.join("artifacts/model_trainer", "model.pkl")
-
 class ModelTrainer:
     def __init__(self):
         self.model_trainer_config = ModelTrainerConfig()
@@ -26,68 +27,73 @@ class ModelTrainer:
     def inititate_model_trainer(self, train_array, test_array):
         try:
             logging.info("Splitting our data into dependent and independent features")
-            X_train, y_train, X_test, y_test  = (
+            X_train, y_train, X_test, y_test = (
                 train_array[:, :-1],
                 train_array[:, -1],
                 test_array[:, :-1],
                 test_array[:, -1]
             )
-# 
+
             model = {
                 "Random Forest": RandomForestClassifier(),
-                "Decision Tree": DecisionTreeClassifier(),
-                "Logastic": LogisticRegression()
+                "Decision Tree": DecisionTreeClassifier(max_features='sqrt'),
+                "Logistic": LogisticRegression(),
+                "XGBoost": xgb.XGBClassifier()
             }
 
             params = {
-                "Random Forest":{
-                    "class_weight":["balanced"],
+                "Random Forest": {
+                    "class_weight": ["balanced"],
                     'n_estimators': [20, 50, 30],
                     'max_depth': [10, 8, 5],
                     'min_samples_split': [2, 5, 10],
                 },
-                "Decision Tree":{
-                    "class_weight":["balanced"],
-                    "criterion":['gini',"entropy","log_loss"],
-                    "splitter":['best','random'],
-                    "max_depth":[3,4,5,6],
-                    "min_samples_split":[2,3,4,5],
-                    "min_samples_leaf":[1,2,3],
-                    "max_features":["auto","sqrt","log2"]
+                "Decision Tree": {
+                    "class_weight": ["balanced"],
+                    "criterion": ['gini', "entropy", "log_loss"],
+                    "splitter": ['best', 'random'],
+                    "max_depth": [3, 4, 5, 6],
+                    "min_samples_split": [2, 3, 4, 5],
+                    "min_samples_leaf": [1, 2, 3],
+                    "max_features": ["auto", "sqrt", "log2"]
                 },
-                "Logastic":{
-                    "class_weight":["balanced"],
+                "Logistic": {
+                    "class_weight": ["balanced"],
                     'penalty': ['l1', 'l2'],
                     'C': [0.001, 0.01, 0.1, 1, 10, 100],
                     'solver': ['liblinear', 'saga']
+                },
+                "XGBoost": {
+                    'max_depth': [3, 5, 7],
+                    'learning_rate': [0.01, 0.1, 0.2],
+                    'n_estimators': [50, 100, 150],
+                    'subsample': [0.8, 1.0],
+                    'colsample_bytree': [0.8, 1.0],
+                    'gamma': [0, 1, 5]
                 }
             }
 
-            model_report:dict = evaluate_model(X_train = X_train, y_train = y_train, X_test = X_test, y_test =y_test,
-                                                models = model, params = params)
-            
-            # To gest best model from our report Dict
-            best_model_score = max(sorted(model_report.values()))
+            model_report: dict = evaluate_model(X_train=X_train, y_train=y_train, X_test=X_test, y_test=y_test,
+                                                models=model, params=params)
 
-            best_model_name = list(model.keys())[
-                list(model_report.values()).index(best_model_score)
-            ]
+            best_model_scores = [x['accuracy'] for x in model_report.values()]
+            best_model_score = max(best_model_scores)
 
-            best_model = model[best_model_name]
-            
-            print(f"Best Model Found, Model Name is: {best_model_name},Accuracy_Score: {best_model_score}")
-            print("\n***************************************************************************************\n")
-            logging.info(f"best model found, Model Name is {best_model_name}, accuracy Score: {best_model_score}")
+            # Check if the best_model_score is in the list
+            if best_model_score in best_model_scores:
+                best_model_name = list(model.keys())[best_model_scores.index(best_model_score)]
+                best_model = model[best_model_name]
 
+                print(f"Best Model Found, Model Name is: {best_model_name}, Accuracy_Score: {best_model_score}")
+                print("\n***************************************************************************************\n")
+                logging.info(f"best model found, Model Name is {best_model_name}, accuracy Score: {best_model_score}")
 
-            save_object(file_path=self.model_trainer_config.train_model_file_apth,
-                        obj = best_model
-                        )
-
-
-
-
-
+                save_object(file_path=self.model_trainer_config.train_model_file_apth,
+                            obj=best_model
+                            )
+            else:
+                # Handle the case when the best_model_score is not in the list
+                print("Error: best_model_score not found in the list.")
 
         except Exception as e:
             raise CustmeException(e, sys)
