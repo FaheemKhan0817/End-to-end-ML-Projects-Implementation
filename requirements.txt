@@ -1,8 +1,7 @@
 pandas
-gunicorn
 Flask
 numpy
 scikit-learn
 seaborn
-xgboost==1.3.3
+xgboost
 -e .
